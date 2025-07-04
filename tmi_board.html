@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMI_BOARD 페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+        * {
+            font-family: "Jua", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        #input_card {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            border: 2px solid #ffd8a8;
+            /* 부드러운 주황색 테두리 */
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            /* 살짝 그림자 */
+        }
+    </style>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRl8tmt_YDPPKerbSjkStKzhY29DgrxbA",
+            authDomain: "sparta-ca7e9.firebaseapp.com",
+            projectId: "sparta-ca7e9",
+            storageBucket: "sparta-ca7e9.firebasestorage.app",
+            messagingSenderId: "536147820684",
+            appId: "1:536147820684:web:a466ea656c8b9fd59e3ba9",
+            measurementId: "G-P688ZHR3WZ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // 데이터 추가
+        $("#add_btn").click(async function () {
+
+            let title = $('#title_input').val();
+            let comment = $('#comment_input').val();
+            let image = $('#image_input').val();
+
+            try {
+                const docRef = await addDoc(collection(db, "tmi_board"), {
+
+                    'title': title,
+                    'image': image,
+                    'comment': comment
+
+                });
+
+                alert("TMI가 추가 되었습니다!");
+                window.location.reload();
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        });
+
+        // 데이터 읽기 및 카드 생성
+        $(".row-cols-1").empty();
+        const querySnapshot = await getDocs(collection(db, "tmi_board"));
+
+        querySnapshot.forEach((doc) => {
+            let row = doc.data();
+            console.log(row)
+
+            let title = doc.data().title;
+            let comment = doc.data().comment;
+            let image = doc.data().image;
+
+            let temp_html = `<div class="col">
+                <div class="card h-100">
+                    <img src="${image}"
+                        class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h4 class="card-title">${title}</h4>
+                        <p class="card-text">${comment}</p>
+                    </div>
+                </div>
+            </div>`;
+
+            $(".row-cols-1").append(temp_html);
+        });
+
+
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom bg-light">
+        <!-- 왼쪽 -->
+        <a href="index.html" class="d-flex align-items-center text-dark text-decoration-none">
+            <span style="font-size: 2rem;">🐱</span>
+            hihi 개발자 지망생
+        </a>
+
+        <!-- 오른쪽 -->
+        <ul class="nav">
+            <li class="nav-item"><a href="index.html" class="nav-link text-dark px-3">Home</a></li>
+            <li class="nav-item"><a href="tmi.html" class="nav-link text-dark px-3">TMI</a></li>
+            <li class="nav-item"><a href="tmi_board.html" class="nav-link text-dark px-3">TMI Board</a></li>
+            <li class="nav-item"><a href="https://github.com/soo59599" class="nav-link text-dark px-3"
+                    target="_blank">GitHub</a></li>
+        </ul>
+    </header>
+    <!-- Navbar 끝 -->
+
+    <!-- 점보 트론 적용 jumbotron -->
+    <!-- 본문 -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- 왼쪽: 설명 + 입력창 (5/12) -->
+            <div class="col-md-5">
+                <h1 class="fw-bold mb-3">스파르타 방명록</h1>
+                <p class="mb-4 fs-5">본인만의 TMI 카드를 만드는 곳입니다.</p>
+
+                <!-- 입력 폼 -->
+                <div id="input_card" class="p-4 bg-light rounded shadow-sm">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="image_input" placeholder="이미지 주소">
+                        <label for="image_input">TMI 이미지 주소</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="title_input" placeholder="아이콘">
+                        <label for="title_input">아이콘 (예: 🐱 윈도우 + . )</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="설명" id="comment_input"
+                            style="height: 100px;"></textarea>
+                        <label for="comment_input">사소한 TMI 설명</label>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="button" class="btn btn-warning" id="add_btn">기록하기</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 오른쪽: 카드 리스트 (7/12) -->
+            <div class="col-md-7">
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <!-- 카드 1 -->
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="https://item.kakaocdn.net/do/7f24de0966ccc82103feb26a6555045cf604e7b0e6900f9ac53a43965300eb9a"
+                                class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">💭</h5>
+                                <p class="card-text">멍때리기를 잘해요</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 카드 2 -->
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="https://item.kakaocdn.net/do/f45ac3bcf375af5bf8c40e5ffb90b9f88f324a0b9c48f77dbce3a43bd11ce785"
+                                class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">🧭</h5>
+                                <p class="card-text">팔로워적인 성향으로 사람들과 조화롭게 소통해요</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 필요시 카드 추가 가능 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
