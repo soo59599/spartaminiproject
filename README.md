@@ -26,9 +26,14 @@ Firebase와 Bootstrap을 활용하여 정적 소개 + 동적 TMI 게시판 기�
 
 ## 📂 프로젝트 구조
 
-├── index.html # 첫 화면 (자기소개 + TMI 리스트 + TMI 게시판 링크)
-├── tmi.html # 자기소개 상세 페이지
-├── tmi_board.html # Firebase와 연결된 사용자 참여형 게시판
+├── index.html
+├── tmi.html
+├── tmi_board.html
+├── images/                  # 화면 미리보기 및 카드용 이미지 저장
+│   ├── main-page.png
+│   ├── tmi.png
+│   └── tmi-board.png
+
 
 
 ---
@@ -53,6 +58,9 @@ Firebase와 Bootstrap을 활용하여 정적 소개 + 동적 TMI 게시판 기�
 
 TMI 페이지는 자기소개 내용을 카드로 시각화하고,  
 TMI 방명록은 사용자들이 직접 카드를 등록하는 기능입니다.
+
+👉 [TMI 게시판 동작 시연 영상 보기](https://youtu.be/fHPCBWIu3lo)
+
 
 ---
 
